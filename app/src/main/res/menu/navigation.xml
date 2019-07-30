@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/genera_scheda"
+        android:icon="@drawable/ic_action_name"
+        android:title="@string/genera_scheda" />
+
+    <item
+        android:id="@+id/aggiungi_ingrediente"
+        android:icon="@drawable/ic_action_name_ing"
+        android:title="@string/aggiungi_ingrediente" />
+
+    <item
+        android:id="@+id/aggiungi_ricetta"
+        android:icon="@drawable/ic_action_name_rec"
+        android:title="@string/aggiunti_ricetta" />
+
+</menu>
