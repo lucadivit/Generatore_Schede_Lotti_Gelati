@@ -46,7 +46,8 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
     }
 
     public Ricetta getItem(String nomeRicetta) {
-        Ricetta ricetta = (Ricetta) this.searchIntoLocalCache(nomeRicetta);
+        //Ricetta ricetta = (Ricetta) this.searchIntoLocalCache(nomeRicetta);
+        Ricetta ricetta = null;
         ArrayList<Ingrediente> ingredienti = new ArrayList<>();
         //Cerco nella cache
         if(ricetta != null) {

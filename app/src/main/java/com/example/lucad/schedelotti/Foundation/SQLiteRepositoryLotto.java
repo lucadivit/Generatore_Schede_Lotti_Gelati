@@ -124,7 +124,7 @@ public class SQLiteRepositoryLotto extends SQLiteRepository{
 
     @Override
     public Lotto getItem(String numeroLotto) {
-        Lotto lotto;
+        Lotto lotto = null;
         //Cerco nella cache locale
         lotto = (Lotto) this.searchIntoLocalCache(numeroLotto);
         if(lotto != null){
@@ -166,9 +166,7 @@ public class SQLiteRepositoryLotto extends SQLiteRepository{
         contentValues.put(this.scadenzaColName, lotto.getScadenza().replaceAll("'", ""));
         int res = sqLiteDatabase.update(this.tableName, contentValues, this.primaryKey+ "=" + "\'" + lotto.getNumeroLotto() + "\'", null);
         if (res > 0) {
-            if(searchIntoLocalCache(lotto.getNumeroLotto()) == null){
-                this.addElementToLocalCache(lotto);
-            }
+            this.addElementToLocalCache(lotto);
             return true;
         }else {
             return false;
