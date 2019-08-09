@@ -61,7 +61,6 @@ public class AggiungiIngredienteHandler {
             format.parse(date);
             res = true;
         } catch (Exception e) {
-            Log.d("DateExc", "AIH", e);
             res = false;
         }
         return res;
