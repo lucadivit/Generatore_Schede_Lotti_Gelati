@@ -1,12 +1,15 @@
 package com.example.lucad.schedelotti;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,33 +126,68 @@ public class AggiungiIngrediente extends Fragment {
         this.btn_rm_ingredient.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
-                String nomeIngrediente = text_nome_ingrediente.getText().toString();
-                int res = aggiungiIngredienteHandler.removeIngredient(nomeIngrediente);
-                switch (res){
-                    case 0:
-                        break;
-                    case 1:
-                        vibrator.vibrate(100);
-                        Toast.makeText(context, context.getString(R.string.rimozione_ingredienti_sistema_errore), Toast.LENGTH_SHORT).show();
-                        break;
-                    case 2:
-                        vibrator.vibrate(300);
-                        Toast.makeText(context, context.getString(R.string.rimozione_ingredienti_sistema), Toast.LENGTH_SHORT).show();
-                        text_lotto_ingrediente.setText("");
-                        text_nome_ingrediente.setText("");
-                        text_nota_ingrediente.setText("");
-                        text_scadenza_lotto_ingrediente.setText("");
-                        Intent intent = new Intent(INGREDIENTE_RIMOSSO_INTENT);
-                        context.sendBroadcast(intent);
-                        refreshAutocomplete(v);
-                        break;
-                    case 3:
-                        vibrator.vibrate(100);
-                        Toast.makeText(context, context.getString(R.string.select_ingredient), Toast.LENGTH_SHORT).show();
+                final Context context = v.getContext();
+                final String nomeIngrediente = text_nome_ingrediente.getText().toString();
+                final View view = v;
+                if(nomeIngrediente.matches("")){
+                    vibrator.vibrate(100);
+                    Toast.makeText(context, context.getString(R.string.select_ingredient), Toast.LENGTH_SHORT).show();
+                }else {
+                    String[] ricette = aggiungiIngredienteHandler.ricetteCoinvolte(nomeIngrediente);
+                    if(ricette.length == 0){
+                        rimuoviIngrediente(nomeIngrediente, view, context);
+                    }else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                        builder.setTitle(R.string.dialog_del_ingrediente_title);
+                        builder.setIcon(android.R.drawable.ic_dialog_alert);
+                        builder.setItems(ricette, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        builder.setPositiveButton(R.string.dialog_del_db_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                rimuoviIngrediente(nomeIngrediente, view, context);
+                            }
+                        });
+                        builder.setNegativeButton(R.string.dialog_del_db_stop, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+                        builder.create();
+                        builder.show();
+                    }
                 }
             }
         });
+    }
+
+    private void rimuoviIngrediente(String nomeIngrediente, View view, Context context){
+        int res = aggiungiIngredienteHandler.removeIngredient(nomeIngrediente);
+        switch (res){
+            case 0:
+                break;
+            case 1:
+                vibrator.vibrate(100);
+                Toast.makeText(context, context.getString(R.string.rimozione_ingredienti_sistema_errore), Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                vibrator.vibrate(300);
+                Toast.makeText(context, context.getString(R.string.rimozione_ingredienti_sistema), Toast.LENGTH_SHORT).show();
+                text_lotto_ingrediente.setText("");
+                text_nome_ingrediente.setText("");
+                text_nota_ingrediente.setText("");
+                text_scadenza_lotto_ingrediente.setText("");
+                Intent intent = new Intent(INGREDIENTE_RIMOSSO_INTENT);
+                context.sendBroadcast(intent);
+                refreshAutocomplete(view);
+                break;
+            case 3:
+                vibrator.vibrate(100);
+                Toast.makeText(context, context.getString(R.string.select_ingredient), Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void refreshAutocomplete(View view){
@@ -179,6 +217,7 @@ public class AggiungiIngrediente extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Context context = view.getContext();
+        final Context ctx = context;
         aggiungiIngredienteHandler = AggiungiIngredienteHandler.getInstance(context);
         this.text_lotto_ingrediente = (EditText) view.findViewById(R.id.lotto_ingrediente_form);
         this.text_nome_ingrediente = (AutoCompleteTextView) view.findViewById(R.id.nome_ingrediente_form);
@@ -189,7 +228,20 @@ public class AggiungiIngrediente extends Fragment {
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         initializeButton();
         initializeAutocomplete(view);
+        view.setOnTouchListener(new OnSwipeTouchListener(context){
 
+            @Override
+            public void onSwipeRight() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_RIGHT);
+                ctx.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_LEFT);
+                ctx.sendBroadcast(intent);
+            }
+        });
     }
 
     public void onButtonPressed(Uri uri) {

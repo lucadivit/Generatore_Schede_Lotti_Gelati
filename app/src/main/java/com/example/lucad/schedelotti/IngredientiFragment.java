@@ -133,9 +133,23 @@ public class IngredientiFragment extends Fragment {
     }
 
     public void initializeRecyclerView(Context context){
+        final Context ctx = context;
         recyclerView.setHasFixedSize(false);
         layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setOnTouchListener(new OnSwipeTouchListener(MainActivity.getContext()){
+            @Override
+            public void onSwipeLeft() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_LEFT);
+                ctx.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onSwipeRight() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_RIGHT);
+                ctx.sendBroadcast(intent);
+            }
+        });
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), 1);
         recyclerView.addItemDecoration(dividerItemDecoration);
         refreshIngredients();

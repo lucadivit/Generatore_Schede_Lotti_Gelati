@@ -272,6 +272,19 @@ public class AggiungiRicetta extends Fragment {
         initializeButton();
         initializeRecyclerView(context);
         initializeAutocomplete(view);
+        recyclerView.setOnTouchListener(new OnSwipeTouchListener(context){
+            @Override
+            public void onSwipeLeft() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_LEFT);
+                context.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onSwipeRight() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_RIGHT);
+                context.sendBroadcast(intent);
+            }
+        });
     }
 
     @Override

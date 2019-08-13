@@ -1,6 +1,9 @@
 package com.example.lucad.schedelotti;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +34,10 @@ public class GeneraScheda extends Fragment{
     private FragmentManager fm = null;
     Fragment active_items = null;
     TabLayout tabLayout = null;
+    public static String ACTIVE_FRAGMENT_RICETTE = "GENERA_RICETTE";
+    public static String ACTIVE_FRAGMENT_INGREDIENTI = "GENERA_INGREDIENTI";
+    public static String ACTIVE_FRAGMENT = "";
+
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -66,7 +73,8 @@ public class GeneraScheda extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_genera_scheda, container, false);
+        View view = inflater.inflate(R.layout.fragment_genera_scheda, container, false);
+        return view;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -100,10 +108,10 @@ public class GeneraScheda extends Fragment{
         tabLayout.setOnTabSelectedListener(onTabSelectedListener);
 
         active_items = fragment_genera_scheda_ricette;
+        ACTIVE_FRAGMENT = ACTIVE_FRAGMENT_RICETTE;
         //Tabs
         fm.beginTransaction().add(R.id.genera_scheda_fragment, fragment_genera_scheda_ricette, "2").commit();
         fm.beginTransaction().add(R.id.genera_scheda_fragment, fragment_genera_scheda_ingredienti, "1").hide(fragment_genera_scheda_ingredienti).commit();
-
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -128,10 +136,12 @@ public class GeneraScheda extends Fragment{
                 case 0:
                     fm.beginTransaction().hide(active_items).show(fragment_genera_scheda_ricette).commit();
                     active_items = fragment_genera_scheda_ricette;
+                    ACTIVE_FRAGMENT = ACTIVE_FRAGMENT_RICETTE;
                     break;
                 case 1:
                     fm.beginTransaction().hide(active_items).show(fragment_genera_scheda_ingredienti).commit();
                     active_items = fragment_genera_scheda_ingredienti;
+                    ACTIVE_FRAGMENT = ACTIVE_FRAGMENT_INGREDIENTI;
                     break;
             }
         }

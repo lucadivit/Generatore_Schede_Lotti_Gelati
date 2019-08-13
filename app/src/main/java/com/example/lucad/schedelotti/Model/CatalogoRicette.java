@@ -68,6 +68,20 @@ public class CatalogoRicette {
         }
     }
 
+    public List<String> getRecipeByIngredient(String nomeIngrediente){
+        List listaRicette = new ArrayList();
+        String query ="SELECT DISTINCT " + repositoryComposti.nomeRicettaColName + " FROM " + repositoryComposti.table_name +
+                " WHERE " + repositoryComposti.nomeIngredienteColName + " = ?";
+        Cursor cursor = repositoryComposti.rawQuery(query, new String[] {nomeIngrediente});
+        if (cursor.getCount() > 0){
+            while (cursor.moveToNext()){
+                String nomeRicetta = cursor.getString(repositoryComposti.nomeRicettaColIDX);
+                listaRicette.add(nomeRicetta);
+            }
+        }
+        return listaRicette;
+    }
+
     public int removeRecipeByIngredient(String nomeIngrediente){
         int res = 0;
         String query ="SELECT DISTINCT " + repositoryComposti.nomeRicettaColName + " FROM " + repositoryComposti.table_name +

@@ -59,6 +59,22 @@ public class CatalogoIngredienti {
         return lotti;
     }
 
+    public int svuotaIlCatalogo(){
+        List listIngredienti = repositoryIngredienti.getItemsList();
+        Iterator iterator = listIngredienti.iterator();
+        if(listIngredienti.size() == 0){
+            return 1;
+        }else {
+            while (iterator.hasNext()){
+                Ingrediente ingrediente = (Ingrediente) iterator.next();
+                if(rimuoviIngredienteDalCatagolo(ingrediente) != 2){
+                    return 3;
+                }
+            }
+            return 0;
+        }
+    }
+
     public int rimuoviIngredienteDalCatagolo(Ingrediente ingrediente){
         catalogoRicette.removeRecipeByIngredient(ingrediente.getNomeIngrediente());
         if(repositoryIngredienti.removeItem(ingrediente) == 2){
@@ -76,7 +92,6 @@ public class CatalogoIngredienti {
         int res = 0;
         int res_lotto = 0;
         //Modify Lotto
-
         if(this.getNumoroLotti().contains(ingrediente.getNumeroLotto())){
             if(repositoryLotti.updateItem(ingrediente.getLotto())){
                 res_lotto = 3;

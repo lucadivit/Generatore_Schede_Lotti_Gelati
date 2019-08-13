@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.lucad.schedelotti.Model.CatalogoIngredienti;
+import com.example.lucad.schedelotti.Model.CatalogoRicette;
 import com.example.lucad.schedelotti.Model.DescrizioneIngrediente;
 import com.example.lucad.schedelotti.Model.Ingrediente;
 import com.example.lucad.schedelotti.Model.Lotto;
@@ -11,15 +12,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 public class AggiungiIngredienteHandler {
     private static final AggiungiIngredienteHandler ourInstance = new AggiungiIngredienteHandler();
     private static CatalogoIngredienti catalogoIngredienti;
+    private static CatalogoRicette catalogoRicette;
 
     public static AggiungiIngredienteHandler getInstance(Context context) {
         catalogoIngredienti = CatalogoIngredienti.getInstance(context);
+        catalogoRicette = CatalogoRicette.getInstance(context);
         return ourInstance;
     }
 
@@ -75,6 +79,34 @@ public class AggiungiIngredienteHandler {
             info.put("note_ingrediente", ingrediente.getNote());
         }
         return info;
+    }
+
+    public String[] ricetteCoinvolte(String nomeIngrediente){
+        List<String> strings = catalogoRicette.getRecipeByIngredient(nomeIngrediente);
+        String[] ricette;
+        if(strings.size() > 3){
+            ricette = new String[4];
+            Iterator iterator = strings.iterator();
+            int i = 0;
+            while (iterator.hasNext()){
+                if(i < 3){
+                    ricette[i] = iterator.next().toString();
+                    i++;
+                }else {
+                    break;
+                }
+            }
+            ricette[i] = "...";
+        }else {
+            ricette = new String[strings.size()];
+            Iterator iterator = strings.iterator();
+            int i = 0;
+            while (iterator.hasNext()){
+                ricette[i] = iterator.next().toString();
+                i++;
+            }
+        }
+        return ricette;
     }
 
     public int removeIngredient(String nomeIngrediente){

@@ -17,9 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
-
 import com.example.lucad.schedelotti.Controller.CreaSchedaHandler;
 
 import java.util.List;
@@ -103,11 +101,19 @@ public class RicetteFragment extends Fragment {
         recyclerViewRicette.setAdapter(adapterRicette);
     }
 
-    public void initializeRecyclerView(Context context){
+    public void initializeRecyclerView(final Context context){
         recyclerViewRicette.setHasFixedSize(false);
 
         layoutManagerRicette = new LinearLayoutManager(context);
         recyclerViewRicette.setLayoutManager(layoutManagerRicette);
+
+        recyclerViewRicette.setOnTouchListener(new OnSwipeTouchListener(MainActivity.getContext()){
+            @Override
+            public void onSwipeLeft() {
+                Intent intent = new Intent(OnSwipeTouchListener.SWIPE_LEFT);
+                context.sendBroadcast(intent);
+            }
+        });
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewRicette.getContext(), 1);
         recyclerViewRicette.addItemDecoration(dividerItemDecoration);

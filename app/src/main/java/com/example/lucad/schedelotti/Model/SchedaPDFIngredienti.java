@@ -5,6 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 
+import com.example.lucad.schedelotti.Foundation.Preferences;
+import com.example.lucad.schedelotti.OptionsActivity;
 import com.example.lucad.schedelotti.R;
 
 import java.text.DateFormat;
@@ -74,6 +76,19 @@ public class SchedaPDFIngredienti extends SchedaPDF{
             canvas.drawText(ingrediente.getNomeIngrediente() ,pxToStartX, pxToStartY, paintIngredienti);
             canvas.drawText(ingrediente.getScadenza() ,pxToStartX + 190, pxToStartY, paintIngredienti);
             canvas.drawText(ingrediente.getNumeroLotto() ,pxToStartX + 370, pxToStartY, paintIngredienti);
+        }
+        //footer
+        Paint paintFooter = new Paint();
+        paintFooter.setTextSize(15);
+        pxToStartY = pxToStartY + 80;
+        String gelateria = Preferences.load_string(context, OptionsActivity.GELATERIA_PREFERENCE);
+        String gelataio = Preferences.load_string(context, OptionsActivity.GELATAIO_PREFERENCE);
+        if(gelateria != null){
+            canvas.drawText(gelateria, pxToStartX + 370, pxToStartY, paintFooter);
+            pxToStartY = pxToStartY + 30;
+        }
+        if(gelataio != null){
+            canvas.drawText(gelataio, pxToStartX + 370, pxToStartY, paintFooter);
         }
     }
 
