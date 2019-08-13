@@ -71,7 +71,7 @@
             android:layout_marginTop="24dp"
             android:gravity="center"
             android:singleLine="true"
-            android:text="@string/add_rec_text"
+            android:text="@string/ricette_items"
             android:textColor="@color/colorPrimary"
             android:textSize="25sp"
             app:layout_constraintEnd_toEndOf="parent"
