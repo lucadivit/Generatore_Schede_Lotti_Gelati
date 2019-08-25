@@ -22,7 +22,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.201"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/aggiungi_ricetta_ingredienti" />
+            app:layout_constraintTop_toBottomOf="@+id/aggiungi_ricetta_ingredienti"
+            app:layout_constraintVertical_bias="1.0" />
 
         <Button
             android:id="@+id/btn_remove_recipe"
@@ -34,14 +35,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/aggiungi_ricetta_ingredienti" />
+            app:layout_constraintTop_toBottomOf="@+id/aggiungi_ricetta_ingredienti"
+            app:layout_constraintVertical_bias="1.0" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/aggiungi_ricetta_ingredienti"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="130dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginTop="120dp"
+            android:layout_marginBottom="45dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

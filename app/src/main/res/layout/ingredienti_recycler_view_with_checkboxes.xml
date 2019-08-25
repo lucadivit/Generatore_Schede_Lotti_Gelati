@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<!--
+    <TextView
+        android:id="@+id/ingrediente_recycler_view"
+        android:layout_width="300sp"
+        android:layout_height="50sp"
+        android:gravity="start|center_vertical"
+        android:scrollbars="vertical"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ingrediente_recycler_view_cb"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/ingrediente_recycler_view_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="50sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />-->
+    <CheckedTextView
+        android:id="@+id/checked_text_view_ing"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:gravity="center_vertical"
+        android:scrollbars="vertical"
+        android:text="Ciao"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/text_dim"
+        android:focusable="true"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
