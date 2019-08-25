@@ -106,13 +106,31 @@ public class SchedaPDFIngredienti extends SchedaPDF{
     @Override
     public boolean removeItem(Object o) {
         Ingrediente ingrediente = (Ingrediente) o;
-        return this.listaIngredientiPerScheda.remove(ingrediente);
+        Iterator iterator = this.listaIngredientiPerScheda.iterator();
+        boolean rimosso = false;
+        while (iterator.hasNext()){
+            Ingrediente ingrediente1 = (Ingrediente) iterator.next();
+            if(ingrediente.getNomeIngrediente().matches(ingrediente1.getNomeIngrediente())){
+                rimosso = this.listaIngredientiPerScheda.remove(ingrediente1);
+                break;
+            }
+        }
+        return rimosso;
     }
 
     @Override
     public boolean checkItem(Object o) {
         Ingrediente ingrediente = (Ingrediente) o;
-        return this.listaIngredientiPerScheda.contains(ingrediente);
+        Iterator iterator = this.listaIngredientiPerScheda.iterator();
+        boolean trovato = false;
+        while (iterator.hasNext()){
+            Ingrediente ingrediente1 = (Ingrediente) iterator.next();
+            if(ingrediente.getNomeIngrediente().matches(ingrediente1.getNomeIngrediente())){
+                trovato = true;
+                break;
+            }
+        }
+        return trovato;
     }
 
     @Override

@@ -18,19 +18,34 @@ public abstract class SQLiteRepository extends SQLiteOpenHelper implements Repos
     private static final int VERSION = 1;
     protected SQLiteDatabase sqLiteDatabase;
     protected Context context;
+    protected boolean isOpen = false;
 
     @Override
     public abstract Cursor rawQuery(String query, String[] args);
 
     public SQLiteRepository(@Nullable Context context) {
         super(context, DATABASE, null, VERSION);
-        this.sqLiteDatabase = getReadableDatabase();
+        this.sqLiteDatabase = getWritableDatabase();
         try{
             this.sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON;");
         }catch (Exception e){
             Log.d("rep", "ex", e);
         }
         this.context = context;
+    }
+
+    public void closeDB(){
+        if(this.isOpen){
+            this.sqLiteDatabase.close();
+            this.isOpen = false;
+        }
+    }
+
+    public void openDB(){
+        if(!this.isOpen){
+            this.sqLiteDatabase = getWritableDatabase();
+            this.isOpen = true;
+        }
     }
 
     @Override

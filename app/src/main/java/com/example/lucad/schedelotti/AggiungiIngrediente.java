@@ -1,7 +1,9 @@
 package com.example.lucad.schedelotti;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -10,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +43,7 @@ public class AggiungiIngrediente extends Fragment {
     private Button btn_rm_ingredient = null;
     private AggiungiIngredienteHandler aggiungiIngredienteHandler = null;
     private Vibrator vibrator;
+    private View view;
     public static final String INGREDIENTE_AGGIUNTO_INTENT = "INGREDIENTE_AGGIUNTO";
     public static final String INGREDIENTE_RIMOSSO_INTENT = "INGREDIENTE_RIMOSSO";
 
@@ -70,6 +74,7 @@ public class AggiungiIngrediente extends Fragment {
             @Override
             public void onClick(View v) {
                 Context context = v.getContext();
+                int res = 0;
                 String nomeIngrediente = text_nome_ingrediente.getText().toString();
                 String lottoIngrediente = text_lotto_ingrediente.getText().toString();
                 String scadenzaLottoIngrediente = text_scadenza_lotto_ingrediente.getText().toString();
@@ -81,7 +86,11 @@ public class AggiungiIngrediente extends Fragment {
                     if(notaIngrediente.matches("")){
                         notaIngrediente = "";
                     }
-                    int res = aggiungiIngredienteHandler.aggiungiIngrediente(nomeIngrediente,lottoIngrediente,scadenzaLottoIngrediente,notaIngrediente);
+                    if(nomeIngrediente.length()<4){
+                        res = 6;
+                    }else {
+                        res = aggiungiIngredienteHandler.aggiungiIngrediente(nomeIngrediente,lottoIngrediente,scadenzaLottoIngrediente,notaIngrediente);
+                    }
                     switch (res){
                         case 0:
                             vibrator.vibrate(100);
@@ -96,7 +105,7 @@ public class AggiungiIngrediente extends Fragment {
                             text_scadenza_lotto_ingrediente.setText("");
                             Intent intent = new Intent(INGREDIENTE_AGGIUNTO_INTENT);
                             context.sendBroadcast(intent);
-                            refreshAutocomplete(v);
+                            refreshAutocomplete();
                             break;
                         case 2:
                             vibrator.vibrate(100);
@@ -117,6 +126,10 @@ public class AggiungiIngrediente extends Fragment {
                         case 5:
                             Toast.makeText(context, context.getString(R.string.invalid_date), Toast.LENGTH_SHORT).show();
                             vibrator.vibrate(100);
+                            break;
+                        case 6:
+                            vibrator.vibrate(100);
+                            Toast.makeText(context, context.getString(R.string.nome_corto), Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -182,21 +195,23 @@ public class AggiungiIngrediente extends Fragment {
                 text_scadenza_lotto_ingrediente.setText("");
                 Intent intent = new Intent(INGREDIENTE_RIMOSSO_INTENT);
                 context.sendBroadcast(intent);
-                refreshAutocomplete(view);
+                refreshAutocomplete();
                 break;
             case 3:
                 vibrator.vibrate(100);
                 Toast.makeText(context, context.getString(R.string.select_ingredient), Toast.LENGTH_SHORT).show();
+            case 4:
+                break;
         }
     }
 
-    public void refreshAutocomplete(View view){
+    public void refreshAutocomplete(){
         final String[] nomiIngredientiAutocomplete = this.aggiungiIngredienteHandler.getNomiIngredienti();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(),android.R.layout.select_dialog_item,nomiIngredientiAutocomplete);
         this.text_nome_ingrediente.setAdapter(adapter);
     }
 
-    public void initializeAutocomplete(View view){
+    public void initializeAutocomplete(){
         this.text_nome_ingrediente.setThreshold(2);
         this.text_nome_ingrediente.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -210,14 +225,37 @@ public class AggiungiIngrediente extends Fragment {
                 }
             }
         });
-        refreshAutocomplete(view);
+        refreshAutocomplete();
     }
+
+    private void initializeBroadcastReceiver(Context context){
+        IntentFilter intentFilter = new IntentFilter(AggiungiIngrediente.INGREDIENTE_RIMOSSO_INTENT);
+        IntentFilter intentFilter1 = new IntentFilter(AggiungiIngrediente.INGREDIENTE_AGGIUNTO_INTENT);
+        context.registerReceiver(broadcastReceiver, intentFilter);
+        context.registerReceiver(broadcastReceiver, intentFilter1);
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action){
+                case AggiungiIngrediente.INGREDIENTE_RIMOSSO_INTENT:
+                    refreshAutocomplete();
+                    break;
+                case AggiungiIngrediente.INGREDIENTE_AGGIUNTO_INTENT:
+                    refreshAutocomplete();
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Context context = view.getContext();
         final Context ctx = context;
+        this.view = view;
         aggiungiIngredienteHandler = AggiungiIngredienteHandler.getInstance(context);
         this.text_lotto_ingrediente = (EditText) view.findViewById(R.id.lotto_ingrediente_form);
         this.text_nome_ingrediente = (AutoCompleteTextView) view.findViewById(R.id.nome_ingrediente_form);
@@ -227,7 +265,8 @@ public class AggiungiIngrediente extends Fragment {
         this.btn_rm_ingredient = (Button) view.findViewById(R.id.btn_remove_ingredient);
         vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         initializeButton();
-        initializeAutocomplete(view);
+        initializeAutocomplete();
+        initializeBroadcastReceiver(context);
         view.setOnTouchListener(new OnSwipeTouchListener(context){
 
             @Override

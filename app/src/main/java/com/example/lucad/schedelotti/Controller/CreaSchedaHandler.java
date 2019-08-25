@@ -44,13 +44,19 @@ public class CreaSchedaHandler {
         return nomi;
     }
 
-    public boolean aggiungiIngredienteAScheda(String nomeIngrediente){
+    public int aggiungiIngredienteAScheda(String nomeIngrediente){
         Ingrediente i = this.catalogoIngredienti.getIngredienteByName(nomeIngrediente);
-        if(scheda.addItem(i)){
-            return true;
+        int res = 0;
+        if(scheda.checkItem(i)){
+            res = 0;
         }else {
-            return false;
+            if(scheda.addItem(i)){
+                res = 1;
+            }else {
+                res = 2;
+            }
         }
+        return res;
     }
 
     public int rimuoviIngredienteDaScheda(String nomeIngrediente){
@@ -72,16 +78,20 @@ public class CreaSchedaHandler {
     }
 
 
-    public int generaSchedaIngredienti(){
+    public int generaSchedaIngredienti(String nomeRicetta){
         String timeStamp = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(Calendar.getInstance().getTime());
         timeStamp = timeStamp.replace("/", "-");
+        String nomeFile;
         /*
         Long tsLong = System.currentTimeMillis()/1000;
         String timeStamp = tsLong.toString();*/
-        String nomeFile = timeStamp + "_" + "item.pdf";
+        if(nomeRicetta.matches("")){
+            nomeFile = timeStamp + "_" + "item.pdf";
+        }else {
+            nomeFile = timeStamp + "_" + nomeRicetta + ".pdf";
+        }
         scheda.setNomeFile(nomeFile);
-        //TODO Nome da dialog
-        scheda.setTitle("");
+        scheda.setTitle(nomeRicetta);
         return scheda.generaScheda();
     }
 

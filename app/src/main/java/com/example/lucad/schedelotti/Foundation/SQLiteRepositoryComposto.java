@@ -111,6 +111,7 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
                 contentValues.put(this.nomeRicettaColName, ricetta.getNomeRicetta().replaceAll("'", ""));
                 contentValues.put(this.nomeIngredienteColName, ingrediente.getNomeIngrediente().replaceAll("'", ""));
                 res = sqLiteDatabase.insert(this.table_name, null ,contentValues);
+                //Log.d("Res", String.valueOf(res));
             }
         }catch (Exception e){
             Log.d("Errore", "Aggiunta Ricetta composto", e);
@@ -127,24 +128,35 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
 
     @Override
     public int removeItem(Object o) {
+        int res = 0;
         if(o == null){
-            return 0;
+            res = 0;
         }else {
             try{
-                int res = 0;
                 Ricetta ricetta = (Ricetta) o;
-                res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
+                Iterator iterator = ricetta.getListaIngredienti().iterator();
+                while (iterator.hasNext()){
+                    Ingrediente ingrediente = (Ingrediente) iterator.next();
+                    res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=? AND " + this.nomeIngredienteColName + "=?", new String[]{ricetta.getNomeRicetta(), ingrediente.getNomeIngrediente()});
+                    Log.d("RimozioneComposto", String.valueOf(res));
+                }
+                //res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
+                //sqLiteDatabase.execSQL("DELETE FROM " + this.table_name + " WHERE " + this.nomeRicettaColName + " = " + "\'" + ricetta.getNomeRicetta() + "\'");
+                this.removeFromLocalCache(ricetta.getNomeRicetta());
+                res = 2;
+                /*
                 if(res > 0){
                     this.removeFromLocalCache(ricetta.getNomeRicetta());
                     return 2;
                 }else {
                     return 1;
-                }
+                }*/
             }catch (Exception e){
                 Log.d("Eccezione", "RM COmp", e);
-                return 3;
+                res = 3;
             }
         }
+        return res;
     }
 
     private void createTable(){

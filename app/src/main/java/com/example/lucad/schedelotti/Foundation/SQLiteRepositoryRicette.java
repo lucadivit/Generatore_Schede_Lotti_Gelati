@@ -64,7 +64,8 @@ public class SQLiteRepositoryRicette extends SQLiteRepository {
 
     @Override
     public HashMap<String, String> getItem(String nomeRicetta) {
-        HashMap<String, String> hashMap = (HashMap) this.searchIntoLocalCache(nomeRicetta);
+        //HashMap<String, String> hashMap = (HashMap) this.searchIntoLocalCache(nomeRicetta);
+        HashMap<String, String> hashMap = null;
         //Cerco nella cache
         if(hashMap != null){
             Log.d("Cache InfoRic.", "Loaded " + hashMap.containsKey(nomeRicetta));
@@ -160,24 +161,24 @@ public class SQLiteRepositoryRicette extends SQLiteRepository {
 
     @Override
     public int removeItem(Object o) {
+        int res = 0;
         if(o == null){
-            return 0;
+            res = 0;
         }else {
             try{
-                int res = 0;
                 Ricetta ricetta = (Ricetta) o;
                 res = sqLiteDatabase.delete(this.table_name, this.primary_key + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
                 if(res > 0){
                     this.removeFromLocalCache(ricetta.getNomeRicetta());
-                    return 2;
+                    res = 2;
                 }else {
-                    return 1;
+                    res = 1;
                 }
             }catch (Exception e){
-                return 3;
+                res = 3;
             }
-
         }
+        return res;
     }
 
     @Override

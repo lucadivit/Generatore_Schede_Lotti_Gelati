@@ -1,6 +1,8 @@
 package com.example.lucad.schedelotti.Controller;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.example.lucad.schedelotti.Model.CatalogoIngredienti;
 import com.example.lucad.schedelotti.Model.CatalogoRicette;
 import com.example.lucad.schedelotti.Model.DescrizioneRicetta;
@@ -35,8 +37,17 @@ public class AggiungiRicettaHandler {
         return nomi;
     }
 
-    public void loadRicetta(String nomeRicetta){
-        Ricetta ricetta = catalogoRicette.getRicettaByName(nomeRicetta);
+    public List<String> getNomiIngredientiRicetta(String nomeRicetta){
+        Ricetta ricetta = this.catalogoRicette.getRicettaByName(nomeRicetta);
+        List<Ingrediente> ing = ricetta.getListaIngredienti();
+        List<String> nomiIngredienti = new ArrayList<>();
+        Iterator iterator = ing.iterator();
+        int i = 0;
+        while (iterator.hasNext()){
+            Ingrediente ingrediente = (Ingrediente) iterator.next();
+            nomiIngredienti.add(ingrediente.getNomeIngrediente());
+        }
+        return nomiIngredienti;
     }
 
     public List<String> getNomiIngredienti(){

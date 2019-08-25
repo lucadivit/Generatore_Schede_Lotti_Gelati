@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.lucad.schedelotti.Foundation.Preferences;
 import com.example.lucad.schedelotti.Model.CatalogoIngredienti;
 import com.example.lucad.schedelotti.Model.CatalogoLotti;
+import com.example.lucad.schedelotti.Model.CatalogoRicette;
 import com.example.lucad.schedelotti.R;
 
 public class OptionsActivity extends AppCompatActivity {
@@ -32,6 +33,8 @@ public class OptionsActivity extends AppCompatActivity {
     private static Context context;
     private CatalogoLotti catalogoLotti;
     private CatalogoIngredienti catalogoIngredienti;
+    private Button eliminaRicetteBtn;
+    private CatalogoRicette catalogoRicette;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +46,17 @@ public class OptionsActivity extends AppCompatActivity {
         context = getApplicationContext();
         catalogoLotti = CatalogoLotti.getInstance(context);
         catalogoIngredienti = CatalogoIngredienti.getInstance(context);
+        catalogoRicette = CatalogoRicette.getInstance(context);
         textViewGelateria = findViewById(R.id.nome_gelateria_text);
         textViewGelataio = findViewById(R.id.nome_gelataio);
+        setTextValues();
         generalOptionsBtn = findViewById(R.id.general_options_btn);
         generalOptionsBtnSv = findViewById(R.id.general_options_btn_save);
         eliminaLottiBtn = findViewById(R.id.db_options_batches_del_btn);
         eliminaDBBtn = findViewById(R.id.database_options_drop_db_btn);
-        vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        eliminaRicetteBtn = findViewById(R.id.recipes_drop_btn);
         setButtonActions();
-        setTextValues();
+        vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -69,6 +74,11 @@ public class OptionsActivity extends AppCompatActivity {
     private void generalOptionsSave(View view){
         String valGelataio = textViewGelataio.getText().toString();
         String valGelateria = textViewGelateria.getText().toString();
+        if(valGelataio.matches("") && valGelateria.matches("")){
+            Snackbar.make(view, R.string.ingrediente_non_aggiunto_form, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            vibrator.vibrate(100);
+        }
         if(!valGelataio.matches("") || !valGelateria.matches("")){
             if(!valGelataio.matches("")){
                 Preferences.save_string(getApplicationContext(),GELATAIO_PREFERENCE, valGelataio);
@@ -81,6 +91,7 @@ public class OptionsActivity extends AppCompatActivity {
             Snackbar.make(view, R.string.options_saved, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             vibrator.vibrate(300);
+            generalOptionsBtn.setEnabled(true);
         }
     }
 
@@ -96,6 +107,11 @@ public class OptionsActivity extends AppCompatActivity {
     }
 
     private void setButtonActions(){
+        String valGelataio = textViewGelataio.getText().toString();
+        String valGelateria = textViewGelateria.getText().toString();
+        if(valGelataio.matches("") && valGelateria.matches("")){
+            generalOptionsBtn.setEnabled(false);
+        }
         generalOptionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,8 +123,51 @@ public class OptionsActivity extends AppCompatActivity {
                     Snackbar.make(v, R.string.general_options_rm, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     vibrator.vibrate(300);
+                    generalOptionsBtn.setEnabled(false);
                 }
+            }
+        });
 
+        eliminaRicetteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final View view = v;
+                AlertDialog.Builder builder = new AlertDialog.Builder(OptionsActivity.this, R.style.MyDialogTheme);
+                builder.setPositiveButton(R.string.dialog_del_db_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        int res = catalogoRicette.svuotaCatalogo();
+                        Intent intent1 = new Intent(AggiungiRicetta.RICETTA_RIMOSSA_INTENT);
+                        switch (res){
+                            case 0:
+                                Snackbar.make(view, R.string.database_deleted_error, Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                                vibrator.vibrate(100);
+                                context.sendBroadcast(intent1);
+                                break;
+                            case 1:
+                                Snackbar.make(view, R.string.no_recipe_to_del, Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                                vibrator.vibrate(100);
+                                break;
+                            case 2:
+                                Snackbar.make(view, R.string.database_deleted, Snackbar.LENGTH_LONG)
+                                        .setAction("Action", null).show();
+                                vibrator.vibrate(300);
+                                context.sendBroadcast(intent1);
+                                break;
+                        }
+                    }
+                });
+                builder.setNegativeButton(R.string.dialog_del_db_stop, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+                builder.setTitle(R.string.dialog_del_db_title);
+                builder.setMessage(R.string.elimina_ricette_msg);
+                builder.setIcon(android.R.drawable.ic_dialog_alert);
+                builder.create();
+                builder.show();
             }
         });
 

@@ -74,28 +74,29 @@ public class SQLiteRepositoryLotto extends SQLiteRepository{
         }else {
             return false;
         }
+
     }
 
     @Override
     public int removeItem(Object o) {
+        int res = 0;
         if(o == null){
-            return 0;
+            res = 0;
         }else {
             try{
-                int res = 0;
                 Lotto lotto = (Lotto) o;
                 res = sqLiteDatabase.delete(this.tableName, this.primaryKey + "=" + "\'" +  lotto.getNumeroLotto() + "\'", null);
                 if(res > 0){
                     this.removeFromLocalCache(lotto.getNumeroLotto());
-                    return 2;
+                    res = 2;
                 }else {
-                    return 1;
+                    res = 1;
                 }
             }catch (Exception e){
-                return 3;
+                res = 3;
             }
-
         }
+        return res;
     }
 
     @Override
@@ -153,7 +154,6 @@ public class SQLiteRepositoryLotto extends SQLiteRepository{
                 Log.d("","",e);
                 lotto = null;
             }
-
             return lotto;
         }
     }

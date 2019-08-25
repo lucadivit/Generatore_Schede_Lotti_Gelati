@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements GeneraScheda.OnFr
                         navigation.setSelectedItemId(R.id.aggiungi_ricetta);
                         break;
                     }
+                    break;
 
                 case OnSwipeTouchListener.SWIPE_RIGHT:
                     if(ACTIVE_FRAGMENT.matches(ACTIVE_FRAGMENT_AGGIUNGI_INGREDIENTE)){
@@ -98,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements GeneraScheda.OnFr
                         navigation.setSelectedItemId(R.id.aggiungi_ingrediente);
                         break;
                     }
+                    break;
             }
         }
     };

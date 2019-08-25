@@ -127,23 +127,24 @@ public class SQLiteRepositoryIngredienti extends SQLiteRepository{
 
     @Override
     public int removeItem(Object o) {
+        int res = 0;
         if(o == null){
-            return 0;
+            res = 0;
         }else {
             try {
-                int res = 0;
                 Ingrediente ingrediente = (Ingrediente) o;
                 res = sqLiteDatabase.delete(this.tableName, this.primaryKey + "=" + "\'" +  ingrediente.getNomeIngrediente() + "\'", null);
                 if(res > 0){
                     this.removeFromLocalCache(ingrediente.getNomeIngrediente());
-                    return 2;
+                    res = 2;
                 }else {
-                    return 1;
+                    res = 1;
                 }
             }catch (Exception e){
-                return 3;
+                res = 3;
             }
         }
+        return res;
     }
 
     @Override
@@ -200,8 +201,10 @@ public class SQLiteRepositoryIngredienti extends SQLiteRepository{
             }
         }
         if(trovato){
+            Log.d("Cache", "Rimosso Dalla Cache " + ingrediente.getNomeIngrediente());
             return this.listaIngredienti.remove(ingrediente);
         }else {
+            Log.d("Cache", "Non Rimosso Dalla Cache " + ingrediente.getNomeIngrediente());
             return false;
         }
     }

@@ -32,6 +32,27 @@ public class CatalogoRicette {
 
     }
 
+    public int svuotaCatalogo(){
+        List<String> nomiRicette = getNomiRicette();
+        int res = 2;
+        if(nomiRicette.size() == 0){
+            res = 1;
+            return res;
+        }else {
+            Iterator iterator = nomiRicette.iterator();
+            while (iterator.hasNext()){
+                String ricetta = (String) iterator.next();
+                if(rimuoviRicettaDalCatalogo(ricetta) == 1){
+
+                }else {
+                    res = 0;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+
     public List<String> getNomiRicette(){
         List<String> nomi = new ArrayList<>();
         ArrayList<Object> ricette = (ArrayList<Object>) repositoryComposti.getItemsList();
@@ -61,11 +82,13 @@ public class CatalogoRicette {
     public int rimuoviRicettaDalCatalogo(String nomeRicetta){
         int res = 0;
         Ricetta ricetta = (Ricetta) repositoryComposti.getItem(nomeRicetta);
+        repositoryComposti.removeItem(ricetta);
         if(repositoryRicette.removeItem(ricetta) == 2){
-            return 1;
+            res = 1;
         }else {
-            return 0;
+            res = 0;
         }
+        return res;
     }
 
     public List<String> getRecipeByIngredient(String nomeIngrediente){
@@ -100,7 +123,7 @@ public class CatalogoRicette {
 
     public int aggiungiRicettaAlCatalogo(Ricetta ricetta){
         int res = 0;
-        int res_info;
+        int res_info = 0;
         boolean trovato = false;
         List<HashMap<String, String>> hashMaps = this.getInfoRicette();
         Iterator iterator = hashMaps.iterator();
@@ -111,44 +134,46 @@ public class CatalogoRicette {
                 break;
             }
         }
-        //Modify Info Ric.
         if(trovato){
-            //Modifica ricette non implementata
-            res_info = 4;
-            res = 4;
-            /*
-            if(repositoryRicette.updateItem(ricetta)){
-                res_info = 3;
-
+            if(this.rimuoviRicettaDalCatalogo(ricetta.getNomeRicetta()) == 1){
+                if(repositoryRicette.addItem(ricetta)){
+                    res_info = 2;
+                }else {
+                    res_info = 3;
+                }
             }else {
-                res_info = 2;
-                res = 2;
-            }*/
-        }else {//Add info
+                res_info = 3;
+            }
+        }else {
             if(repositoryRicette.addItem(ricetta)){
                 res_info = 1;
             }else {
                 res_info = 0;
-                res = 0;
             }
         }
-        if(res_info == 1 || res_info == 3){
-            //Modify
-            if(this.getNomiRicette().contains(ricetta.getNomeRicetta())){
-                if(repositoryComposti.updateItem(ricetta)){
-                    res = 3;
-                }else {
-                    res = 2;
-                }
-            }else {//add
+        switch (res_info){
+            case 0:
+                res = 0;
+                break;
+            case 1:
                 if(repositoryComposti.addItem(ricetta)){
                     res = 1;
                 }else {
+                    repositoryRicette.removeItem(ricetta);
                     res = 0;
                 }
-            }
-        }else {
-
+                break;
+            case 2:
+                if(repositoryComposti.addItem(ricetta)){
+                    res = 3;
+                }else {
+                    repositoryRicette.removeItem(ricetta);
+                    res = 2;
+                }
+                break;
+            case 3:
+                res = 2;
+                break;
         }
         return res;
     }
