@@ -73,4 +73,9 @@
     <string name="database_empty">Database Già Svuotato</string>
     <string name="dialog_del_db_message">Questa Operazione Cancellerà Tutti I Dati. Continuare?</string>
     <string name="dialog_del_ingrediente_title">Le Seguenti Ricette Saranno Eliminate</string>
+    <string name="nome_corto">Nome Troppo Corto</string>
+    <string name="elimina_ricette">Elimina Ricette</string>
+    <string name="elimina_ricette_msg">Questa Operazione Cancellerà Tutte Le Ricette. Continuare?</string>
+    <string name="no_recipe_to_del">Nessuna Ricette Da Eliminare</string>
+    <string name="dialog_nome_ricetta">Nome Della Ricetta</string>
 </resources>

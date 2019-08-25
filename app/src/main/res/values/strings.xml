@@ -73,4 +73,9 @@
     <string name="database_deleted_error">Error During Operation. Retry!</string>
     <string name="dialog_del_db_message">This Operation Will Remove All Your Data. Continue?</string>
     <string name="dialog_del_ingrediente_title">The Following Recipe Will Be Deleted</string>
+    <string name="nome_corto">Name Too Short</string>
+    <string name="elimina_ricette">Delete Recipes</string>
+    <string name="elimina_ricette_msg">This Operation Will Remove All Recipes. Continue?</string>
+    <string name="no_recipe_to_del">No Recipe To Delete</string>
+    <string name="dialog_nome_ricetta">Recipe Name</string>
 </resources>
