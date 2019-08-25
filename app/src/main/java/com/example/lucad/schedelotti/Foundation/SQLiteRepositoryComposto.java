@@ -110,8 +110,11 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(this.nomeRicettaColName, ricetta.getNomeRicetta().replaceAll("'", ""));
                 contentValues.put(this.nomeIngredienteColName, ingrediente.getNomeIngrediente().replaceAll("'", ""));
-                res = sqLiteDatabase.insert(this.table_name, null ,contentValues);
-                //Log.d("Res", String.valueOf(res));
+                res = sqLiteDatabase.replace(this.table_name, null ,contentValues);
+                if(res==-1){
+                    Log.d("Errore", "Problema inserimento composto");
+                    break;
+                }
             }
         }catch (Exception e){
             Log.d("Errore", "Aggiunta Ricetta composto", e);
@@ -135,22 +138,22 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
             try{
                 Ricetta ricetta = (Ricetta) o;
                 Iterator iterator = ricetta.getListaIngredienti().iterator();
+                /*
                 while (iterator.hasNext()){
                     Ingrediente ingrediente = (Ingrediente) iterator.next();
+                    Log.d("RimozioneComposto", ingrediente.getNomeIngrediente());
                     res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=? AND " + this.nomeIngredienteColName + "=?", new String[]{ricetta.getNomeRicetta(), ingrediente.getNomeIngrediente()});
                     Log.d("RimozioneComposto", String.valueOf(res));
-                }
-                //res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
+                }*/
+                res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
                 //sqLiteDatabase.execSQL("DELETE FROM " + this.table_name + " WHERE " + this.nomeRicettaColName + " = " + "\'" + ricetta.getNomeRicetta() + "\'");
                 this.removeFromLocalCache(ricetta.getNomeRicetta());
-                res = 2;
-                /*
                 if(res > 0){
                     this.removeFromLocalCache(ricetta.getNomeRicetta());
                     return 2;
                 }else {
                     return 1;
-                }*/
+                }
             }catch (Exception e){
                 Log.d("Eccezione", "RM COmp", e);
                 res = 3;

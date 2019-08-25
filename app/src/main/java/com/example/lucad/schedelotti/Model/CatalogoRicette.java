@@ -82,13 +82,20 @@ public class CatalogoRicette {
     public int rimuoviRicettaDalCatalogo(String nomeRicetta){
         int res = 0;
         Ricetta ricetta = (Ricetta) repositoryComposti.getItem(nomeRicetta);
-        repositoryComposti.removeItem(ricetta);
         if(repositoryRicette.removeItem(ricetta) == 2){
+            repositoryComposti.removeItem(ricetta);
             res = 1;
         }else {
             res = 0;
         }
         return res;
+    }
+
+    public Cursor getComposto(String nome){
+        String query ="SELECT DISTINCT " + repositoryComposti.nomeRicettaColName + " FROM " + repositoryComposti.table_name +
+                " WHERE " + repositoryComposti.nomeRicettaColName+ " = ?";
+        Cursor cursor = repositoryComposti.rawQuery(query, new String[] {nome});
+        return cursor;
     }
 
     public List<String> getRecipeByIngredient(String nomeIngrediente){
@@ -156,6 +163,8 @@ public class CatalogoRicette {
                 res = 0;
                 break;
             case 1:
+                Cursor c = getComposto(ricetta.getNomeRicetta());
+                Log.d("Size", String.valueOf(c.getCount()));
                 if(repositoryComposti.addItem(ricetta)){
                     res = 1;
                 }else {

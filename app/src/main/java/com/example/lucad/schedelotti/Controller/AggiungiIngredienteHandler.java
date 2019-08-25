@@ -84,7 +84,6 @@ public class AggiungiIngredienteHandler {
     public String[] ricetteCoinvolte(String nomeIngrediente){
         List<String> strings = catalogoRicette.getRecipeByIngredient(nomeIngrediente);
         String[] ricette;
-
         ricette = new String[strings.size()];
         Iterator iterator = strings.iterator();
         int i = 0;
@@ -92,30 +91,6 @@ public class AggiungiIngredienteHandler {
             ricette[i] = iterator.next().toString();
             i++;
         }
-
-        /*
-        if(strings.size() > 3){
-            ricette = new String[4];
-            Iterator iterator = strings.iterator();
-            int i = 0;
-            while (iterator.hasNext()){
-                if(i < 3){
-                    ricette[i] = iterator.next().toString();
-                    i++;
-                }else {
-                    break;
-                }
-            }
-            ricette[i] = "...";
-        }else {
-            ricette = new String[strings.size()];
-            Iterator iterator = strings.iterator();
-            int i = 0;
-            while (iterator.hasNext()){
-                ricette[i] = iterator.next().toString();
-                i++;
-            }
-        }*/
         return ricette;
     }
 

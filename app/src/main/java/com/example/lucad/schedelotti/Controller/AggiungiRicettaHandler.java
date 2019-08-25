@@ -57,12 +57,6 @@ public class AggiungiRicettaHandler {
 
     public boolean aggiungiIngredienteARicetta(String nomeIngrediente){
         return this.nomeIngredienteRicetta.add(nomeIngrediente);
-        /*Ingrediente ingrediente = catalogoIngredienti.getIngredienteByName(nomeIngrediente);
-        if (ingredientiRicetta.contains(ingrediente)){
-            return false;
-        }else {
-            return ingredientiRicetta.add(ingrediente);
-        }*/
     }
 
     public int rimuoviIngredienteRicetta(String nomeIngrediente){
@@ -77,19 +71,6 @@ public class AggiungiRicettaHandler {
             res = 0;
         }
         return res;
-        /*
-        int res = 0;
-        Ingrediente ingrediente = catalogoIngredienti.getIngredienteByName(nomeIngrediente);
-        if (ingredientiRicetta.contains(ingrediente)){
-            if(ingredientiRicetta.remove(ingrediente)){
-                res = 1;
-            }else {
-                res = 2;
-            }
-        }else {
-            res = 0;
-        }
-        return res;*/
     }
 
     public int aggiungiRicetta(String nomeRicetta){
@@ -110,18 +91,6 @@ public class AggiungiRicettaHandler {
             res = 5;
         }
         return res;
-        /*
-        int res = 0;
-        if(this.ingredientiRicetta.size()>0){
-            Ricetta ricetta = new Ricetta(this.ingredientiRicetta, new DescrizioneRicetta(nomeRicetta, ""));
-            res = catalogoRicette.aggiungiRicettaAlCatalogo(ricetta);
-        }else {
-            return 5;
-        }
-        if(res == 3 || res == 1){
-            this.ingredientiRicetta.clear();
-        }
-        return res;*/
     }
 
     public int rimuoviRicetta(String nomeRicetta){
