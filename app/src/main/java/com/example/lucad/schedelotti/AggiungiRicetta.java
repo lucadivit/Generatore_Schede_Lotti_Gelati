@@ -184,7 +184,7 @@ public class AggiungiRicetta extends Fragment {
 
     private void rimuoviRicetta(String nomeRicetta, View v, Context context){
         int res = 0;
-        res = aggiungiRicettaHandler.rimuoviRicetta(text_nome_ricetta.getText().toString());
+        res = aggiungiRicettaHandler.rimuoviRicetta(nomeRicetta);
         switch (res){
             case 0:
                 vibrator.vibrate(100);
@@ -241,14 +241,14 @@ public class AggiungiRicetta extends Fragment {
             public void onClick(View v) {
                 int res;
                 Context context = v.getContext();
-                String nomeRicetta = text_nome_ricetta.getText().toString();
+                String nomeRicetta = text_nome_ricetta.getText().toString().toLowerCase();
                 if(nomeRicetta.matches("")){
                     res = 6;
                 }else {
                     if(nomeRicetta.length() < 4){
                         res = 7;
                     }else {
-                        res = aggiungiRicettaHandler.aggiungiRicetta(text_nome_ricetta.getText().toString());
+                        res = aggiungiRicettaHandler.aggiungiRicetta(nomeRicetta);
                     }
                 }
                 Intent intent = new Intent(RICETTA_AGGIUNTA_INTENT);
@@ -405,7 +405,7 @@ public class AggiungiRicetta extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //removeTouchListener();
-                String nomeRicetta = text_nome_ricetta.getText().toString();
+                String nomeRicetta = text_nome_ricetta.getText().toString().toLowerCase();
                 showRecipeIngredients(nomeRicetta);
             }
         });
@@ -414,7 +414,7 @@ public class AggiungiRicetta extends Fragment {
             String actVal = "";
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                oldVal = text_nome_ricetta.getText().toString();
+                oldVal = text_nome_ricetta.getText().toString().toLowerCase();
             }
 
             @Override
@@ -424,7 +424,7 @@ public class AggiungiRicetta extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                actVal = text_nome_ricetta.getText().toString();
+                actVal = text_nome_ricetta.getText().toString().toLowerCase();
                 if(!oldVal.matches("") && actVal.matches("")){
                     refreshIngredients();
                     //addTouchListener(view.getContext());

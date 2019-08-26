@@ -75,10 +75,10 @@ public class AggiungiIngrediente extends Fragment {
             public void onClick(View v) {
                 Context context = v.getContext();
                 int res = 0;
-                String nomeIngrediente = text_nome_ingrediente.getText().toString();
-                String lottoIngrediente = text_lotto_ingrediente.getText().toString();
+                String nomeIngrediente = text_nome_ingrediente.getText().toString().toLowerCase();
+                String lottoIngrediente = text_lotto_ingrediente.getText().toString().toLowerCase();
                 String scadenzaLottoIngrediente = text_scadenza_lotto_ingrediente.getText().toString();
-                String notaIngrediente = text_nota_ingrediente.getText().toString();
+                String notaIngrediente = text_nota_ingrediente.getText().toString().toLowerCase();
                 if(lottoIngrediente.matches("") || nomeIngrediente.matches("") || scadenzaLottoIngrediente.matches("")){
                     vibrator.vibrate(100);
                     Toast.makeText(context, context.getString(R.string.ingrediente_non_aggiunto_form), Toast.LENGTH_SHORT).show();
@@ -140,7 +140,7 @@ public class AggiungiIngrediente extends Fragment {
             @Override
             public void onClick(View v) {
                 final Context context = v.getContext();
-                final String nomeIngrediente = text_nome_ingrediente.getText().toString();
+                final String nomeIngrediente = text_nome_ingrediente.getText().toString().toLowerCase();
                 final View view = v;
                 if(nomeIngrediente.matches("")){
                     vibrator.vibrate(100);

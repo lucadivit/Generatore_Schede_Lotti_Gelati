@@ -132,7 +132,7 @@ public class IngredientiFragment extends Fragment {
                 builder.setView(input);
                 builder.setPositiveButton(R.string.dialog_del_db_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        String nome_ricetta =String.valueOf(input.getText());
+                        String nome_ricetta = String.valueOf(input.getText()).toLowerCase();
                         if(nome_ricetta.matches("")){
                             nome_ricetta = "";
                         }
