@@ -26,8 +26,11 @@ public abstract class SQLiteRepository extends SQLiteOpenHelper implements Repos
     public SQLiteRepository(@Nullable Context context) {
         super(context, DATABASE, null, VERSION);
         this.sqLiteDatabase = getWritableDatabase();
+        this.isOpen = true;
         try{
             this.sqLiteDatabase.execSQL("PRAGMA foreign_keys=ON;");
+            //this.sqLiteDatabase.execSQL("PRAGMA cache_size=0;");
+            //this.sqLiteDatabase.execSQL("PRAGMA auto_vacuum=0;");
         }catch (Exception e){
             Log.d("rep", "ex", e);
         }
@@ -36,15 +39,29 @@ public abstract class SQLiteRepository extends SQLiteOpenHelper implements Repos
 
     public void closeDB(){
         if(this.isOpen){
-            this.sqLiteDatabase.close();
-            this.isOpen = false;
+            try{
+                this.sqLiteDatabase.close();
+                this.isOpen = false;
+                Log.d("DB", "Closed");
+            }catch (Exception e){
+                Log.d("exc", "closedb", e);
+            }
+        }else {
+            Log.d("DB", "Not Closed");
         }
     }
 
     public void openDB(){
         if(!this.isOpen){
-            this.sqLiteDatabase = getWritableDatabase();
-            this.isOpen = true;
+            try{
+                this.sqLiteDatabase = getWritableDatabase();
+                this.isOpen = true;
+                Log.d("DB", "Opened");
+            }catch (Exception e){
+                Log.d("exc", "opendb", e);
+            }
+        }else {
+            Log.d("DB", "Not Opened");
         }
     }
 

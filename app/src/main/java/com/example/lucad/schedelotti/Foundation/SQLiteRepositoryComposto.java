@@ -137,16 +137,8 @@ public class SQLiteRepositoryComposto extends SQLiteRepository {
         }else {
             try{
                 Ricetta ricetta = (Ricetta) o;
-                Iterator iterator = ricetta.getListaIngredienti().iterator();
-                /*
-                while (iterator.hasNext()){
-                    Ingrediente ingrediente = (Ingrediente) iterator.next();
-                    Log.d("RimozioneComposto", ingrediente.getNomeIngrediente());
-                    res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=? AND " + this.nomeIngredienteColName + "=?", new String[]{ricetta.getNomeRicetta(), ingrediente.getNomeIngrediente()});
-                    Log.d("RimozioneComposto", String.valueOf(res));
-                }*/
                 res = sqLiteDatabase.delete(this.table_name, this.nomeRicettaColName + "=" + "\'" +  ricetta.getNomeRicetta() + "\'", null);
-                //sqLiteDatabase.execSQL("DELETE FROM " + this.table_name + " WHERE " + this.nomeRicettaColName + " = " + "\'" + ricetta.getNomeRicetta() + "\'");
+                Log.d("RimozioneComposto", String.valueOf(res));
                 this.removeFromLocalCache(ricetta.getNomeRicetta());
                 if(res > 0){
                     this.removeFromLocalCache(ricetta.getNomeRicetta());

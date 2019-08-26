@@ -99,6 +99,7 @@ public class AggiungiRicettaHandler {
             res = 5;
         }else {
             res = catalogoRicette.rimuoviRicettaDalCatalogo(nomeRicetta);
+            this.nomeIngredienteRicetta.clear();
         }
         return res;
     }
