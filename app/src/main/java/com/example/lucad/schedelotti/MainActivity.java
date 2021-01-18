@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements GeneraScheda.OnFr
 
     private void permessi(){
         //TODO aggiustare richieste permessi
-        if (Build.VERSION.SDK_INT >= 26){
+        if (Build.VERSION.SDK_INT >= 23){
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
                 // Permission is not granted
                 if (ActivityCompat.shouldShowRequestPermissionRationale(this,
